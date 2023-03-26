@@ -5,9 +5,49 @@ import Login from "./Login";
 import PremiumContent from "./PremiumContent";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
+import { useEffect, useState } from "react";
+import { getToken, getUser, resetUserSession, setUserSession } from "./service/AuthService";
+import axios from "axios";
+
+const verifyTokenAPIURL = "https://qtmxgpkmrc.execute-api.us-east-1.amazonaws.com/log/verify";
+
 function App() {
 
-  
+  const [isAuthenticating, setAuthenticating] = useState(true);
+
+  useEffect(() =>{
+    const token = getToken();
+    if(token === 'undefined' || token === undefined || token === null || !token){
+      return;
+    }
+
+    const requestConfig = {
+      headers: {
+          'x-api-key': 'XvMCNtqeh81cZpC4Ztz9X7bl67Ax4Fjn6ep9eCR5'
+      }
+    }
+
+    const requestBody = {
+      user: getUser(),
+      token:token
+  }
+
+  axios.post(verifyTokenAPIURL, requestBody, requestConfig).then((response) =>{
+      setUserSession(response.data.user, response.data.token);
+      setAuthenticating(false);
+  }).catch(() => {
+      resetUserSession();
+      setAuthenticating(false);
+  })
+
+    
+  }, []);
+
+  const token = getToken();
+  if(isAuthenticating && token){
+    return <div className="content">Authenticating...</div>
+  }
+
   return (
     <div className="App">
       <BrowserRouter>

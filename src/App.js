@@ -3,7 +3,11 @@ import Home from "./Home";
 import Register from "./Register";
 import Login from "./Login";
 import PremiumContent from "./PremiumContent";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
 function App() {
+
+  
   return (
     <div className="App">
       <BrowserRouter>
@@ -15,10 +19,14 @@ function App() {
         </div>
         <div className="content">
           <Routes>
-            <Route exact path="/" Component={Home} />
-            <Route exact path="/register" Component={Register} />
-            <Route exact path="/login" Component={Login} />
-            <Route exact path="/premium-content" Component={PremiumContent} />
+            <Route exact path="/" element={<Home />} />
+            <Route element={<PublicRoute />} >
+              <Route  path="/register" element={<Register />} />
+              <Route  path="/login" element={< Login />} />
+            </Route>
+            <Route element={<PrivateRoute />} >
+              <Route  path="/premium-content" element={ <PremiumContent />} />
+            </Route>
           </Routes>
         </div>
       </BrowserRouter>

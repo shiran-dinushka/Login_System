@@ -9,7 +9,7 @@ const Register = () =>{
     const [email,setEmail] = useState('');
     const [username,setUsername] = useState('');
     const [password,setPassword] = useState('');
-    const [message,setMessage] = useState('');
+    const [message,setMessage] = useState(null);
 
     const submitHandler = (event) =>{
         event.preventDefault();
@@ -17,7 +17,7 @@ const Register = () =>{
             setMessage('All feilds are required');
             return;
         }
-        
+        setMessage(null);
         const requestConfig = {
             headers: {
                 'x-api-key': 'XvMCNtqeh81cZpC4Ztz9X7bl67Ax4Fjn6ep9eCR5'
@@ -31,9 +31,9 @@ const Register = () =>{
             password:password
         }
 
-        axios.post(registerUrl, requestBody, requestConfig).then(response =>{
+        axios.post(registerUrl, requestBody, requestConfig).then((response) =>{
             setMessage("Registration Successful");
-        }).catch(error=>{
+        }).catch((error)=>{
             if(error.response.status === 401 || error.response.status === 403){
                 setMessage(error.response.data.message);
             }else{
